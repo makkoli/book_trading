@@ -1,0 +1,13 @@
+//- Navbar header
+
+mixin navbar
+    nav(class="navbar navbar-default")
+        div(class="container-fluid")
+            div(class="navbar-header")
+                a(class="navbar-brand" href="/") Book Trading Club
+            div(class="collapse navbar-collapse")
+                ul(class="nav navbar-nav navbar-right")
+                    li
+                        a(href="/auth/twitter")
+                            img(src="images/sprite.png" style="padding-right: 5px")
+                            | Sign In With Twitter
