@@ -1,13 +1,18 @@
 //- Navbar header
 
-mixin navbar
+mixin navbar(logged, user)
     nav(class="navbar navbar-default")
         div(class="container-fluid")
             div(class="navbar-header")
                 a(class="navbar-brand" href="/") Book Trading Club
             div(class="collapse navbar-collapse")
                 ul(class="nav navbar-nav navbar-right")
-                    li
-                        a(href="/auth/twitter")
-                            img(src="images/sprite.png" style="padding-right: 5px")
-                            | Sign In With Twitter
+                    if logged
+                        li
+                            a(href="/" + user + "/profile") Welcome #{user} 
+                                span(class="glyphicon glyphicon-user" aria-hidden="true")
+                    else
+                        li
+                            a(href="/auth/twitter")
+                                img(src="/images/sprite.png" style="padding-right: 5px")
+                                | Sign In With Twitter

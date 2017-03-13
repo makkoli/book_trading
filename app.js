@@ -8,6 +8,8 @@ var express = require('express'),
     User = require('./models/user-model'),
     Env = require('./env/env'),
     site = require('./routes/site'),
+    profile = require('./routes/profile'),
+    middleware = require('./middleware/middleware'),
     app = express();
 
 var dbConnStr = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/book';
@@ -40,6 +42,7 @@ app.use(require('express-session')({
         maxAge: oneDay
     }
 }));
+app.use(middleware.getLoginSession);
 
 var twitterConsumerKey = process.env.TWITTER_CONSUMER_KEY || Env.env.twitterConsumerKey,
     twitterConsumerSecret = process.env.TWITTER_CONSUMER_SECRET || Env.env.twitterConsumerSecret,
@@ -72,6 +75,9 @@ app.use(passport.session());
 
 // Home page
 app.get('/', site.index);
+
+// Profile page
+app.get('/:user/profile', profile.index);
 
 // Login with twitter
 app.get('/auth/twitter', passport.authenticate('twitter'));
