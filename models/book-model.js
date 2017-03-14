@@ -14,7 +14,7 @@ var BookSchema = new Schema({
     // path to the image file
     cover: {
         type: String,
-        required: true
+        default: "/images/no_cover.jpg"
     }
     user: {
         type: String,

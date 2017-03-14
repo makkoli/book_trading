@@ -15,6 +15,9 @@ html
                 dd #{city}
                 dt State:
                 dd #{state}
-            a(class="btn btn-default" href="/" + user + "/profile/update"
-                role="button" style="float: right") Update Settings
-            p test
+            div(class="clearfix")
+                a(class="btn btn-primary btn-lg" href="/" + user + "/profile/edit"
+                    role="button" class="pull-right") Update Settings
+            h1(class="bg-success page-header" style="padding: 10px") Your Books
+            a(class="btn btn-success btn-lg" href="/" + user + "/profile/add"
+                role="button" class="pull-right") Add Book

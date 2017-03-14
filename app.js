@@ -79,6 +79,15 @@ app.get('/', site.index);
 // Profile page
 app.get('/:user/profile', profile.index);
 
+// Edit profile page - GET
+app.get('/:user/profile/edit', profile.editGet);
+
+// Edit profile page - POST
+app.post('/:user/profile/edit', profile.editPost);
+
+// Add a book to a users profile
+app.get('/:user/profile/add', profile.addBookGet);
+
 // Login with twitter
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
