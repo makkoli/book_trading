@@ -19,5 +19,16 @@ html
                 a(class="btn btn-primary btn-lg" href="/" + user + "/profile/edit"
                     role="button" class="pull-right") Update Settings
             h1(class="bg-success page-header" style="padding: 10px") Your Books
+            table(class="table")
+                tr
+                    th Title
+                    th Author
+                    th Proposed Trades
+                each book in userBooks
+                    tr
+                        td
+                            a(href="/book/" + book.id)= book.title
+                        td= book.author
+                        td View
             a(class="btn btn-success btn-lg" href="/" + user + "/profile/add"
                 role="button" class="pull-right") Add Book

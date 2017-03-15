@@ -3,6 +3,10 @@ var mongoose = require('mongoose'),
 
 // define book Schema
 var BookSchema = new Schema({
+    bookId: {
+        type: Number,
+        required: true,
+    },
     title: {
         type: String,
         required: true
@@ -14,8 +18,8 @@ var BookSchema = new Schema({
     // path to the image file
     cover: {
         type: String,
-        default: "/images/no_cover.jpg"
-    }
+        default: "public/images/book_covers/no_cover.jpg"
+    },
     user: {
         type: String,
         required: true

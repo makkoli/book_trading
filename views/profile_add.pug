@@ -7,19 +7,25 @@ html
         +navbar(logged, user)
         div(class="container")
             h1(class="bg-success page-header" style="padding: 10px") Add Book
-            form(class="form-horizontal" method="post" action="/" + user + "/profile/add")
+            h3(class="text-center" style="color: red") #{error}
+            h6(class="text-center")
+                span(style="color: red") * = required
+            form(class="form-horizontal" method="post"
+                action="/" + user + "/profile/add"
+                enctype="multipart/form-data")
                 div(class="form-group")
-                    label(for="image" class="col-sm-2 control-label") Image
+                    label(for="coverFile" class="col-sm-2 control-label") Cover File
                     div(class="col-sm-10")
-                        input(type="text" class="form-control" name="image")
+                        input(type="file" name="cover")
                 div(class="form-group")
-                    label(for="title" class="col-sm-2 control-label") Title
+                    label(for="title" class="col-sm-2 control-label") Title*
                     div(class="col-sm-10")
                         input(type="text" class="form-control" name="title")
                 div(class="form-group")
-                    label(for="author" class="col-sm-2 control-label") Author
+                    label(for="author" class="col-sm-2 control-label") Author*
                     div(class="col-sm-10")
                         input(type="text" class="form-control" name="author")
                 div(class="form-group")
                     div(class="col-sm-offset-10 col-sm-2")
-                        button(type="submit" class="btn btn-success btn-lg pull-right") Add Book
+                        button(type="submit"
+                        class="btn btn-success btn-lg pull-right") Add Book

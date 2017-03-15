@@ -10,6 +10,16 @@ var express = require('express'),
     site = require('./routes/site'),
     profile = require('./routes/profile'),
     middleware = require('./middleware/middleware'),
+    multer = require('multer'),
+    storage = multer.diskStorage({
+        destination: function(req, file, cb) {
+            cb(null, 'public/images/book_covers');
+        },
+        filename: function(req, file, cb) {
+            cb(null, Date.now() + '_' + file.originalname);
+        }
+    }),
+    upload = multer({ storage: storage }),
     app = express();
 
 var dbConnStr = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/book';
@@ -87,6 +97,9 @@ app.post('/:user/profile/edit', profile.editPost);
 
 // Add a book to a users profile
 app.get('/:user/profile/add', profile.addBookGet);
+
+// Add a book to a user's profile after user submits it
+app.post('/:user/profile/add', upload.single('cover'), profile.addBookPost);
 
 // Login with twitter
 app.get('/auth/twitter', passport.authenticate('twitter'));
