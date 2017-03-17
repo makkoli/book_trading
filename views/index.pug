@@ -5,4 +5,10 @@ html
     +head
     body
         +navbar(logged, user)
-        h1 Hello World!
+        div(class="container-fluid")
+            div(class="book-img")
+                img(src="/images/book_covers/1489544404726_1984_george-orwell.jpg")
+            each book in books
+                div(class="book-img")
+                    a(href="/book/" + book.bookId)
+                        img(src=book.coverPath)

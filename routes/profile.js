@@ -155,9 +155,9 @@ exports.addBookPost = function(req, res) {
     // logged in
     if (res.locals.logged && res.locals.user === req.params.user) {
         // check if title is added and author are added
-        if (req.body.title === undefined || req.body.author === undefined) {
+        if (req.body.title === "" || req.body.author === "") {
             res.render('profile_add', {
-                error: "Missing Title",
+                error: "Missing Field",
                 logged: res.locals.logged,
                 user: res.locals.user
             });
@@ -167,7 +167,8 @@ exports.addBookPost = function(req, res) {
             var query = { username: req.params.user };
             var book = new Book({
                     bookId: Date.now() - req.file.size,
-                    cover: req.file.path,
+                    // take off the public base directory
+                    cover: req.file.path.match(/\/.*/)[0],
                     title: req.body.title,
                     author: req.body.author,
                     user: req.params.user

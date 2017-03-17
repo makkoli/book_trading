@@ -9,6 +9,7 @@ var express = require('express'),
     Env = require('./env/env'),
     site = require('./routes/site'),
     profile = require('./routes/profile'),
+    book = require('./routes/book'),
     middleware = require('./middleware/middleware'),
     multer = require('multer'),
     storage = multer.diskStorage({
@@ -85,6 +86,12 @@ app.use(passport.session());
 
 // Home page
 app.get('/', site.index);
+
+// Retrieve the details of a book
+app.get('/book/:bookId', book.getBookDetails);
+
+// Get the page for the user to propose a trade
+app.get('/book/:bookId/propose', book.proposeBookTrade);
 
 // Profile page
 app.get('/:user/profile', profile.index);

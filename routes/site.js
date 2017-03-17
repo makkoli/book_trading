@@ -9,11 +9,17 @@ exports.index = function(req, res) {
     Book.find(query, function(err, docs) {
         if (err) throw err;
 
-        console.log(docs);
+        var books = docs.map(function(book) {
+            return {
+                bookId: book.bookId,
+                coverPath: book.cover
+            };
+        });
 
         res.render('index', {
             logged: res.locals.logged,
-            user: res.locals.user
+            user: res.locals.user,
+            books: books
         });
     });
 };
