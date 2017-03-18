@@ -6,8 +6,6 @@ html
     body
         +navbar(logged, user)
         div(class="container-fluid")
-            div(class="book-img")
-                img(src="/images/book_covers/1489544404726_1984_george-orwell.jpg")
             each book in books
                 div(class="book-img")
                     a(href="/book/" + book.bookId)

@@ -12,5 +12,6 @@ html
                 h1= book.title
                 h1
                     small= book.author
+                h5 Owned by #{book.user}
                 if logged && !userOwnsBook
                     a(class="btn btn-info btn-lg" href="/book/" + book.bookId + "/propose") Propose Trade

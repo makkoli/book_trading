@@ -1,5 +1,6 @@
 var User = require('../models/user-model'),
     Book = require('../models/book-model'),
+    profileController = require('../controllers/profileController'),
     Promise = require('promise');
 
 // Profile page
@@ -7,13 +8,13 @@ exports.index = function(req, res) {
     // if user logged in with correct username
     if (res.locals.logged && res.locals.user === req.params.user) {
         var userPromise = new Promise(function(resolve, reject) {
-            getUserInfo(req.params.user, function(err, res) {
+            profileController.getUserInfo(req.params.user, function(err, res) {
                 if (err) reject(err);
                 else resolve(res);
             });
         });
         var bookPromise = new Promise(function(resolve, reject) {
-            getUserBooks(req.params.user, function(err, res) {
+            profileController.getUserBooks(req.params.user, function(err, res) {
                 if (err) reject(err);
                 else resolve(res);
             });
@@ -21,7 +22,6 @@ exports.index = function(req, res) {
 
         Promise.all([userPromise, bookPromise])
         .then(function(response) {
-            console.log(response);
             var userInfo = response[0],
                 userBooks = response[1];
 
@@ -47,46 +47,6 @@ exports.index = function(req, res) {
         });
     }
 };
-
-// String Function -> Object
-// Gets the user location info from the db
-function getUserInfo(user, cb) {
-    var userQuery = { username: user };
-
-    // Fetch the users information from the db
-    User.findOne(userQuery, function(err, doc) {
-        if (err) cb(true, null);
-
-        cb(null, {
-                user: doc.username,
-                firstName: doc.first_name,
-                lastName: doc.last_name,
-                city: doc.city,
-                state: doc.state
-            }
-        );
-    });
-}
-
-// String Function -> [Object]
-// Gets the users book from the db
-function getUserBooks(user, cb) {
-    var bookQuery = { user: user };
-
-    Book.find(bookQuery, function(err, docs) {
-        if (err) cb(true, null);
-
-        var userBooks = docs.map(function(book) {
-            return {
-                id: book.bookId,
-                title: book.title,
-                author: book.author
-            };
-        });
-
-        cb(null, userBooks);
-    });
-}
 
 // Edit a user profiles
 exports.editGet = function(req, res) {
@@ -187,4 +147,12 @@ exports.addBookPost = function(req, res) {
             user: res.locals.user
         });
     }
+};
+
+// Gets the users current proposals
+exports.getUserProposals = function(req, res) {
+    res.render('error', {
+        logged: res.locals.logged,
+        user: res.locals.user
+    });
 };

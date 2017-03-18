@@ -93,6 +93,9 @@ app.get('/book/:bookId', book.getBookDetails);
 // Get the page for the user to propose a trade
 app.get('/book/:bookId/propose', book.proposeBookTrade);
 
+// Offer a trade proposal from one user to the other
+app.post('/book/:bookId/propose', book.processTradeProposal);
+
 // Profile page
 app.get('/:user/profile', profile.index);
 

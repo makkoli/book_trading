@@ -6,7 +6,7 @@ html
     body
         +navbar(logged, user)
         div(class="container")
-            h1(class="bg-primary page-header" style="padding: 10px") Profile
+            h1(class="bg-primary page-header profile-padding") Profile
             h2(class="text-center") #{user}
             dl(class="dl-horizontal")
                 dt Name:
@@ -18,7 +18,7 @@ html
             div(class="clearfix")
                 a(class="btn btn-primary btn-lg" href="/" + user + "/profile/edit"
                     role="button" class="pull-right") Update Settings
-            h1(class="bg-success page-header" style="padding: 10px") Your Books
+            h1(class="bg-success page-header profile-padding") Your Books
             table(class="table")
                 tr
                     th Title
@@ -29,6 +29,9 @@ html
                         td
                             a(href="/book/" + book.id)= book.title
                         td= book.author
-                        td View
-            a(class="btn btn-success btn-lg" href="/" + user + "/profile/add"
-                role="button" class="pull-right") Add Book
+                        td
+                            a(href="/" + user + "/view/" + book.id) View
+            div(class="clearfix")
+                a(class="btn btn-success btn-lg" href="/" + user + "/profile/add"
+                    role="button" class="pull-right") Add Book
+            h1(class="bg-info page-header profile-padding") Completed Trades

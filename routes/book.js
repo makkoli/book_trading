@@ -12,7 +12,8 @@ exports.getBookDetails = function(req, res) {
             bookId: doc.bookId,
             title: doc.title,
             author: doc.author,
-            coverPath: doc.cover
+            coverPath: doc.cover,
+            user: doc.user
         };
 
         res.render('book_details', {
@@ -41,13 +42,39 @@ exports.proposeBookTrade = function(req, res) {
                 };
             });
 
+            // check if user owns book so they can't propose on their
+            // own book
+            // returns true if current book is owned by user
+            //  flip the value since the every function needs to go through
+            //  every book that the user owns
+            var doesUserOwnBook = !docs.every(function(book) {
+                return req.params.bookId != book.bookId;
+            });
+
             res.render('book_propose_trade', {
                 logged: res.locals.logged,
                 user: res.locals.user,
-                bookTitles: userTitles,
-                bookId: req.params.bookId
+                userBookTitles: userTitles,
+                bookToTradeForId: req.params.bookId,
+                userOwnsBook: doesUserOwnBook
             });
         });
+    }
+    else {
+        res.render('error', {
+            logged: res.locals.logged,
+            user: res.locals.user
+        });
+    }
+};
+
+// Handles a trade proposal from the user
+exports.processTradeProposal = function(req, res) {
+    if (res.locals.logged) {
+        // book ids from user submitted form
+        var booksProposed = Object.keys(req.body);
+
+
     }
     else {
         res.render('error', {
