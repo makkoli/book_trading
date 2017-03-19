@@ -73,8 +73,29 @@ exports.processTradeProposal = function(req, res) {
     if (res.locals.logged) {
         // book ids from user submitted form
         var booksProposed = Object.keys(req.body);
+        var findQuery = { bookId: { "$in": booksProposed } };
+        var updateQuery = { bookId: req.params.bookId };
+        // find all book titles to add to the trade proposal
+        Book.find(findQuery, function(err, docs) {
+            if (err) throw err;
 
+            var booksToTrade = docs.map(function(book) {
+                return {
+                    bookId: book.bookId,
+                    title: book.title
+                };
+            });
+            var update = {"$push": { proposed_trades: booksToTrade } };
 
+            // update the book trade proposals with the new proposal
+            Book.update(updateQuery, update, function(err) {
+                if (err) throw err;
+
+                res.render('template', {
+                    message: "Proposal Sent"
+                });
+            });
+        });
     }
     else {
         res.render('error', {

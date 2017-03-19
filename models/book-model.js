@@ -25,7 +25,7 @@ var BookSchema = new Schema({
         required: true
     },
     proposed_trades: {
-        type: [String],
+        type: [],
         default: []
     }},
     {

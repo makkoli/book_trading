@@ -1,0 +1,8 @@
+include mixins/head.pug
+include mixins/navbar.pug
+
+html
+    +head
+    body
+        +navbar(logged, user)
+        h1(style="text-align: center") #{message}

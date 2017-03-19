@@ -1,0 +1,21 @@
+include mixins/head.pug
+include mixins/navbar.pug
+
+html
+    +head
+    body
+        +navbar(logged, user)
+        div(class="container")
+            div(class="page-header")
+                h1
+                    strong #{bookToTradeFor}
+                    small(class="pull-right") Trade Proposals
+            each proposal in tradeProposals
+                div(class="row bottom-border")
+                    div(class="col-sm-6")
+                        ul
+                            each book in proposal
+                                li= book.title
+                    div(class="col-sm-6 text-right")
+                        button(type="submit" class="btn btn-success" aria-label="approve")
+                            span(class="glyphicon glyphicon-ok" aria-hidden="true")

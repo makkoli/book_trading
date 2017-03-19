@@ -111,6 +111,10 @@ app.get('/:user/profile/add', profile.addBookGet);
 // Add a book to a user's profile after user submits it
 app.post('/:user/profile/add', upload.single('cover'), profile.addBookPost);
 
+// Gets the proposals from other users for which book(s) they will trade
+// for the :user's book
+app.get('/:user/view/:bookId', profile.getBookProposal);
+
 // Login with twitter
 app.get('/auth/twitter', passport.authenticate('twitter'));
 

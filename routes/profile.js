@@ -27,9 +27,9 @@ exports.index = function(req, res) {
 
             res.render('profile', {
                 logged: res.locals.logged,
-                user: userInfo.user,
-                firstName: userInfo.firstName,
-                lastName: userInfo.lastName,
+                user: userInfo.username,
+                firstName: userInfo.first_name,
+                lastName: userInfo.last_name,
                 city: userInfo.city,
                 state: userInfo.state,
                 userBooks: userBooks
@@ -150,9 +150,47 @@ exports.addBookPost = function(req, res) {
 };
 
 // Gets the users current proposals
-exports.getUserProposals = function(req, res) {
-    res.render('error', {
-        logged: res.locals.logged,
-        user: res.locals.user
-    });
+exports.getBookProposal = function(req, res) {
+    // logged in
+    if (res.locals.logged && res.locals.user === req.params.user) {
+        var query = { bookId: req.params.bookId };
+        // Get the books proposed trades from other users
+        var bookProposedTrades;
+        new Promise(function(resolve, reject) {
+            profileController.getBookInfo(req.params.bookId,
+                function(err, book) {
+                    if (err) reject(err);
+                    else resolve(book);
+                }
+            );
+        }).then(function(response) {
+            // If there are no proposed trades render a default message
+            if (response.length === 0) {
+                res.render('template', {
+                    message: "No proposed trades",
+                    logged: res.locals.logged,
+                    user: res.locals.user
+                });
+            }
+            // else, render all proposals
+            else {
+                res.render('proposals', {
+                    logged: res.locals.logged,
+                    user: res.locals.user,
+                    bookToTradeFor: response.title,
+                    tradeProposals: response.proposed_trades
+                });
+            }
+        }).catch(function(error) {
+            console.log(error);
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end(null);
+        });
+    }
+    else {
+        res.render('error', {
+            logged: res.locals.logged,
+            user: res.locals.user
+        });
+    }
 };
