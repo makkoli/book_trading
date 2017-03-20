@@ -27,6 +27,10 @@ var UserSchema = new Schema({
     state: {
         type: String,
         default: ""
+    },
+    completed_trades: {
+        type: [],
+        default: []
     }},
     {
         collection: 'users'

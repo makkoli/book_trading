@@ -26,6 +26,58 @@ exports.getUserBooks = function(user, cb) {
     });
 };
 
+// String String [Object] Function -> undefined
+// Upadtes the users completed trades
+exports.updateUserCompletedTrades = function(user, fromUser,
+    bookGiven, bookReceived, cb) {
+    var user = { username: user };
+    var update = {
+        "$push": {
+            completed_trades: {
+                fromUser: fromUser,
+                bookGiven: bookGiven,
+                bookReceived: bookReceived,
+                date: Date.now()
+            }
+        }
+    };
+
+    User.update(user, update, function(err) {
+        if (err) cb(true, null);
+        else cb(null, true);
+    });
+};
+
+// [String] Function -> undefined
+// Removes proposed trades of a book when the user completes a trade
+exports.removeProposedTrades = function(bookIds, cb) {
+    var query = {};
+    var update = {
+        "$pull": {
+            proposed_trades: {
+                bookId: { $in: bookIds }
+            }
+        }
+    };
+    var options = { multi: true };
+
+    Book.update(query, update, options, function(err) {
+        if (err) cb(true, null);
+        else cb(null, true);
+    });
+};
+
+// [String] Function -> undefined
+// Removes a given list of books from the db
+exports.removeBooks = function(books, cb) {
+    var query = { bookId: { "$in": books } };
+
+    Book.remove(query, function(err) {
+        if (err) cb(true, null);
+        else cb(null, true);
+    });
+}
+
 // String Function -> Object
 // Gets the book info for one book from the books id
 exports.getBookInfo = function(bookId, cb) {

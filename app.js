@@ -115,6 +115,9 @@ app.post('/:user/profile/add', upload.single('cover'), profile.addBookPost);
 // for the :user's book
 app.get('/:user/view/:bookId', profile.getBookProposal);
 
+// Completes the book trade between two users
+app.post('/:user/view/:bookId/:proposalNum', profile.completeTrade);
+
 // Login with twitter
 app.get('/auth/twitter', passport.authenticate('twitter'));
 

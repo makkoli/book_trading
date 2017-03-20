@@ -177,7 +177,8 @@ exports.getBookProposal = function(req, res) {
                 res.render('proposals', {
                     logged: res.locals.logged,
                     user: res.locals.user,
-                    bookToTradeFor: response.title,
+                    bookToTradeForId: response.bookId,
+                    bookToTradeForTitle: response.title,
                     tradeProposals: response.proposed_trades
                 });
             }
@@ -193,4 +194,93 @@ exports.getBookProposal = function(req, res) {
             user: res.locals.user
         });
     }
+};
+
+// Complete the trade between two user and remove the books from the db
+exports.completeTrade = function(req, res) {
+    var userQuery = { username: req.params.user },
+        userUpdate,
+        bookQuery = { bookId: req.params.bookId },
+        proposalNum = req.params.proposalNum;
+
+    // Retrieve the proposed trades for the book the user owns and
+    // is trading
+    new Promise(function(resolve, reject) {
+        profileController.getBookInfo(req.params.bookId, function(err, res) {
+            if (err) reject(err);
+            else resolve(res);
+        });
+    // Then, add all the book info to the completed trades on each
+    // users profile and remove the books from the db
+    }).then(function(response) {
+        var bookBeingGiven = {
+            bookId: response.bookId,
+            title: response.title
+        };
+        var bookBeingGivenOwner = response.user;
+        var bookBeingReceived = {
+            bookId: response.proposed_trades[req.params.proposalNum].bookId,
+            title: response.proposed_trades[req.params.proposalNum].title
+        };
+        var bookBeingReceivedOwner =
+            response.proposed_trades[req.params.proposalNum].owner;
+        console.log('response', response);
+        console.log('book being given', bookBeingGiven);
+        console.log('book being given owner', bookBeingGivenOwner);
+        console.log('book being received', bookBeingReceived);
+        console.log('book being received owner', bookBeingReceivedOwner);
+        // add the completed trade to the user
+        var userAccepting = new Promise(function(resolve, reject) {
+            profileController.updateUserCompletedTrades(bookBeingGivenOwner,
+                bookBeingReceived.owner, bookBeingGiven, bookBeingReceived,
+                function(err, res) {
+                    if (err) reject(err);
+                    else resolve(res);
+                });
+        });
+
+        // add completed trade from the other user
+        var userOffering = new Promise(function(resolve, reject) {
+            profileController.updateUserCompletedTrades(bookBeingReceived.owner,
+                bookBeingGivenOwner, bookBeingReceived, bookBeingGiven,
+                function(err, res) {
+                    if (err) reject(err);
+                    else resolve(res);
+                });
+        });
+
+
+        // get the books to remove
+        var booksToRemove = [
+            req.params.bookId,
+            response.proposed_trades[req.params.proposalNum].bookId
+        ];
+        console.log('books to remove', booksToRemove);
+
+        // remove the books
+        var removeBooks = new Promise(function(resolve, reject) {
+            profileController.removeBooks(booksToRemove,
+                function(err, res) {
+                    if (err) reject(err);
+                    else resolve(res);
+                });
+        });
+
+        // remove the trade proposals from all other books
+        var removeTradeProposals = new Promise(function(resolve, reject) {
+            profileController.removeProposedTrades(bookIds, function(err, res) {
+                if (err) reject(err);
+                else resolve(res);
+            });
+        });
+
+        // execute all the promises and redirect
+        Promise.all([userAccepting, userOffering,
+            removeBooks, removeTradeProposals]);
+        res.redirect('/' + req.params.user + '/profile');
+    }).catch(function(error) {
+        console.log(error);
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end(null);
+    });
 };

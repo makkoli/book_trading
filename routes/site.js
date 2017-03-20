@@ -2,7 +2,6 @@ var Book = require('../models/book-model');
 
 // Landing page
 exports.index = function(req, res) {
-    console.log(req.session);
     var query = {};
 
     // Retrieve a chunk of books to display on home page

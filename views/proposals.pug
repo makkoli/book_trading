@@ -8,14 +8,18 @@ html
         div(class="container")
             div(class="page-header")
                 h1
-                    strong #{bookToTradeFor}
+                    strong #{bookToTradeForTitle}
                     small(class="pull-right") Trade Proposals
+            - var proposalNum = 0;
             each proposal in tradeProposals
-                div(class="row bottom-border")
+                div(class="row")
                     div(class="col-sm-6")
                         ul
-                            each book in proposal
-                                li= book.title
+                            li
+                                a(href="/book/" + proposal.bookId) #{proposal.title}
                     div(class="col-sm-6 text-right")
-                        button(type="submit" class="btn btn-success" aria-label="approve")
-                            span(class="glyphicon glyphicon-ok" aria-hidden="true")
+                        form(action="/" + user + "/view/" + bookToTradeForId + "/" + proposalNum
+                            method="post")
+                            button(type="submit" class="btn btn-success" aria-label="approve")
+                                span(class="glyphicon glyphicon-ok" aria-hidden="true")
+                - proposalNum++

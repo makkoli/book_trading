@@ -10,11 +10,11 @@ html
                 h4(class="text-center text-info") You own this book.
             else
                 h1(class="bg-primary" style="padding: 10px") Propose Trade
-                h4(class="text-center text-info") Choose the book(s) that you will trade
+                h4(class="text-center text-info") Choose the book that you will trade
                 form(action="/book/" + bookToTradeForId + "/propose" method="post")
                     each book in userBookTitles
-                        div(class="checkbox")
+                        div(class="radio")
                             label
-                                input(type="checkbox" name=book.bookId)
+                                input(type="radio" name="bookId" value=book.bookId)
                                 p= book.title
                     button(type="submit" class="btn btn-primary btn-lg pull-right") Propose
