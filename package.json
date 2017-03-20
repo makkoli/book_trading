@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/makkoli/book_trading.git/issues"
   },
-  "homepage": "https://github.com/makkoli/nightlife_app.git#readme",
+  "homepage": "https://github.com/makkoli/book_trading.git#readme",
   "dependencies": {
     "babel-preset-es2015": "^6.18.0",
     "body-parser": "^1.15.2",
