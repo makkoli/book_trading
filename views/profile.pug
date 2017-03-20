@@ -7,17 +7,17 @@ html
         +navbar(logged, user)
         div(class="container")
             h1(class="bg-primary page-header profile-padding") Profile
-            h2(class="text-center") #{user}
+            h2(class="text-center") #{userInfo.username}
             //- Users location info
             dl(class="dl-horizontal")
                 dt Name:
-                dd #{firstName} #{lastName}
+                dd #{userInfo.first_name} #{userInfo.last_name}
                 dt City:
-                dd #{city}
+                dd #{userInfo.city}
                 dt State:
-                dd #{state}
+                dd #{userInfo.state}
             div(class="clearfix")
-                a(class="btn btn-primary btn-lg" href="/" + user + "/profile/edit"
+                a(class="btn btn-primary btn-lg" href="/" + userInfo.username + "/profile/edit"
                     role="button" class="pull-right") Update Settings
             //- Users current books and trade proposals for each book
             h1(class="bg-success page-header profile-padding") Your Books
@@ -44,3 +44,8 @@ html
                     th Traded With
                     th Gave
                     th Received
+                each trade in userInfo.completed_trades
+                    tr
+                        td= trade.fromUser
+                        td= trade.bookGiven.title
+                        td= trade.bookReceived.title

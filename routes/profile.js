@@ -27,11 +27,8 @@ exports.index = function(req, res) {
 
             res.render('profile', {
                 logged: res.locals.logged,
-                user: userInfo.username,
-                firstName: userInfo.first_name,
-                lastName: userInfo.last_name,
-                city: userInfo.city,
-                state: userInfo.state,
+                user: res.locals.user,
+                userInfo: userInfo,
                 userBooks: userBooks
             });
         })
@@ -224,15 +221,10 @@ exports.completeTrade = function(req, res) {
         };
         var bookBeingReceivedOwner =
             response.proposed_trades[req.params.proposalNum].owner;
-        console.log('response', response);
-        console.log('book being given', bookBeingGiven);
-        console.log('book being given owner', bookBeingGivenOwner);
-        console.log('book being received', bookBeingReceived);
-        console.log('book being received owner', bookBeingReceivedOwner);
         // add the completed trade to the user
         var userAccepting = new Promise(function(resolve, reject) {
             profileController.updateUserCompletedTrades(bookBeingGivenOwner,
-                bookBeingReceived.owner, bookBeingGiven, bookBeingReceived,
+                bookBeingReceivedOwner, bookBeingGiven, bookBeingReceived,
                 function(err, res) {
                     if (err) reject(err);
                     else resolve(res);
@@ -241,7 +233,7 @@ exports.completeTrade = function(req, res) {
 
         // add completed trade from the other user
         var userOffering = new Promise(function(resolve, reject) {
-            profileController.updateUserCompletedTrades(bookBeingReceived.owner,
+            profileController.updateUserCompletedTrades(bookBeingReceivedOwner,
                 bookBeingGivenOwner, bookBeingReceived, bookBeingGiven,
                 function(err, res) {
                     if (err) reject(err);
@@ -249,13 +241,11 @@ exports.completeTrade = function(req, res) {
                 });
         });
 
-
         // get the books to remove
         var booksToRemove = [
             req.params.bookId,
             response.proposed_trades[req.params.proposalNum].bookId
         ];
-        console.log('books to remove', booksToRemove);
 
         // remove the books
         var removeBooks = new Promise(function(resolve, reject) {
@@ -266,9 +256,9 @@ exports.completeTrade = function(req, res) {
                 });
         });
 
-        // remove the trade proposals from all other books
+        // remove the trade proposals that contain the books just removed
         var removeTradeProposals = new Promise(function(resolve, reject) {
-            profileController.removeProposedTrades(bookIds, function(err, res) {
+            profileController.removeProposedTrades(booksToRemove, function(err, res) {
                 if (err) reject(err);
                 else resolve(res);
             });
