@@ -4,7 +4,7 @@
   "description": "a book trading club that allows users to swap books",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
     "build": "babel public/js/dev -d public/js"
   },
   "repository": {
